@@ -87,7 +87,10 @@ class CommentMonitor(HttpClient):
                     if comment['parent']:
                         continue  # ignore replies
                     username = comment['user']['username']
-                    body = comment['body'].replace("\n", "")
+                    body = comment['body']
+                    body = body.replace("\n\n", " ")
+                    body = body.replace("\n \n", " ")
+                    body = body.replace("\n", " ")
                     await new_comments.put((username, body))
                 except:
                     pass
