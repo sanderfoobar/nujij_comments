@@ -17,6 +17,10 @@ irc_port = 6667
 re_nu = r"https:\/\/www.nu.nl\/[\W+-+]+\/(\d+)\/"
 new_comments = asyncio.Queue()
 ldup = lambda x: list(dict.fromkeys(x))
+comment_counter = 0
+odd_color = "\x0304,01"
+even_color = "\x0309,01"
+
 
 # yolo
 comment_added_query = gzip.decompress(bytes.fromhex(
@@ -205,11 +209,47 @@ class IRCBoat:
         asyncio.create_task(self.comment_monitor())
 
     @safu
+    async def wrap_message(self, message) -> List[str]:
+        spl = []
+        max_segment = 400
+        while True:
+            if len(message) >= max_segment:
+                _continue = False
+                for _ in ['.', ' ']:
+                    try:
+                        c = message.index(_, max_segment - 60, max_segment + 60) + 1
+                        spl.append(message[:c].strip())
+                        message = message[c:]
+                        _continue = True
+                        break
+                    except Exception as ex:
+                        pass
+                if _continue:
+                    continue
+                raise Exception("whatever")
+            else:
+                if message:
+                    spl.append(message.strip())
+                break
+        return [s for s in spl if s]
+
+    @safu
     async def send_comment(self, author, message):
+        global comment_counter
+
+        color = [odd_color, even_color][comment_counter % 2 == 0]
         author = f"""
-        \x02\x0300,01<{author}\x0300,01>\x03\x02
+        \x02{color}<{author}{color}>\x03\x02
         """.strip()
-        self.bot.send("PRIVMSG", target=self.channel, message=f"{author} {message}")
+
+        wrapped = await self.wrap_message(message)
+        if not wrapped:
+            return
+
+        for wrapped_message in wrapped:
+            self.bot.send("PRIVMSG", target=self.channel, message=f"{author} {wrapped_message}")
+
+        comment_counter += 1
 
     async def comment_monitor(self):
         while True:
