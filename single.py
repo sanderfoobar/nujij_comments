@@ -26,7 +26,7 @@ except:
     print("requires: pip install aiohttp")
     sys.exit(1)
 
-from utils import asset_id_query, comment_added_query
+from nujij_comments.utils import asset_id_query, comment_added_query
 
 
 async def main(article_id: int):

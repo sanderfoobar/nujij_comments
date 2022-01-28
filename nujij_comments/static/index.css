@@ -1,0 +1,52 @@
+body {
+    color: #00e676;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 1.6em;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background: black;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+body > pre {
+    font-size:0.6em;
+    margin-bottom:0;
+}
+
+span.dushi_btn {
+    font-size: 0.8em;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+pre, body > span {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.input span.even {
+    color: #467eff;
+}
+
+.input span.odd {
+    color: #ff4d4d;
+}
+
+.input {
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 1px solid #00e676;
+}
+
+#screen {
+    margin-top:16px;
+}
+
+.input p {
+    display: inline-block;
+    padding-right: .4em;
+    margin: 0;
+    padding: 10px;
+}

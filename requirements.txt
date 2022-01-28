@@ -1,2 +1,4 @@
 aiohttp
 bottom
+quart
+asyncio-multisubscriber-queue==0.3.1

@@ -1,19 +1,10 @@
 import gzip
+from typing import List
 from functools import wraps
 
+ldup = lambda x: list(dict.fromkeys(x))
 
-def safu(func):
-    # safety first guiz
-    @wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except:
-            pass
-    return wrapper
-
-
-# yolo
+# i made the graphql queries more compact...
 comment_added_query = gzip.decompress(bytes.fromhex(
     "1f8b0800000000000003bd574d6fe23010bdf32bbc520f5da9ea656fbd51da9590b65555dab36592815a4d6cd61f5251c57f5f3b38c1716"
     "c1368b5488013deccbcf18cdf04a997b21074a3286768c6eb1a989a9625949717444a50f3f206cdef7e5ca10bf8282a5dc27ccdb80073f7"
@@ -63,3 +54,40 @@ asset_id_query = gzip.decompress(bytes.fromhex(
     "b1a5632e0a30d202d0839f87f273c3dac5353bad02529b6249b5286429cddcd740b30a4b9bd3f77ce12ca9e4cfe8354d83c969c1e138521"
     "ee4f98953882c395d371bac17445b20887c6b31ae3fae5ed61018037b762bed5bc1d7472bfa4075d8ed7d93d04006707fed4e1146efe23c"
     "e013adac40c6b0a03744b87ff00a72a06e9642e0000"))
+
+
+def safu(func):
+    # safety first guiz
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        try:
+            return await func(*args, **kwargs)
+        except:
+            pass
+    return wrapper
+
+
+@safu
+async def wrap_message(msg) -> List[str]:
+    spl = []
+    max_line_length = 400
+    while True:
+        if len(msg) >= max_line_length:
+            _continue = False
+            for needle in ['.', ' ']:
+                try:
+                    idx = msg.index(needle, max_line_length - 60, max_line_length + 60) + 1
+                    spl.append(msg[:idx].strip())
+                    msg = msg[idx:]
+                    _continue = True
+                    break
+                except Exception as ex:
+                    pass
+            if _continue:
+                continue
+            raise Exception("whatever")
+        else:
+            if msg:
+                spl.append(msg.strip())
+            break
+    return [s for s in spl if s]

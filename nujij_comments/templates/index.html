@@ -1,0 +1,104 @@
+<!--
+Feel free to subscribe to the websocket endpoint that is included on this page. Example:
+
+		import aiohttp
+
+		async def main():
+			ses = aiohttp.ClientSession()
+			ws = await ses.ws_connect("{{url_for('ws')}}")  # possibly needs wss://
+			while True:
+				msg = await ws.receive()
+				if msg.type in [aiohttp.WSMsgType.CLOSE, aiohttp.WSMsgType.CLOSED]:
+					print("ws disconnected")
+				else:
+					print(json.loads(msg))
+
+		if __name__ == '__main__':
+			loop = asyncio.get_event_loop()
+			loop.run_until_complete(main())
+
+this will get you the comment stream in both plain text and dushi.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NUjij Live</title>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='index.css') }}">
+	<script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+</head>
+<body>
+	<pre>
+ ▐ ▄ ▄• ▄▌ ▐▄▄▄▪   ▐▄▄▄
+•█▌▐██▪██▌  ·████   ·██
+▐█▐▐▌█▌▐█▌▪▄ ██▐█·▪▄ ██
+██▐█▌▐█▄█▌▐▌▐█▌▐█▌▐▌▐█▌
+▀▀ █▪ ▀▀▀  ▀▀▀•▀▀▀ ▀▀▀•</pre>
+	<span class="dushi_btn">dushi [OFF]</span>
+
+	<div id="screen"></div>
+</body>
+
+<script>
+	let c = 0;
+	let max_items = 50;
+	let ws;
+	let dushi = false;
+	let ws_url = "{{ url_for('ws') }}";
+	let cache = [];
+
+	$(document).ready(() => {
+		let container = $('#screen');
+		let dushi_btn = $('.dushi_btn');
+
+		dushi_btn.on('click', () => {
+			dushi = !dushi;
+			dushi_btn.html(`dushi [${dushi ? 'ON' : 'OFF'}]`);
+			redraw();
+		});
+
+		function setupWs() {
+			redraw();
+
+			ws = new WebSocket(ws_url);
+			ws.onmessage = (event) => {
+				let data = JSON.parse(event.data);
+				cache.push(data);
+				if(cache.length >= max_items) cache.shift();
+
+				addComment(data[dushi ? 'dushi' : 'plain']);
+			}
+
+			ws.onclose = () => {
+				//ws = undefined;
+				//setTimeout(setupWs, 1000);
+			}
+		}
+
+		function redraw() {
+			c = 0;
+			container.html('');
+
+			cache.forEach((data) => {
+				addComment(data[dushi ? 'dushi' : 'plain']);
+			});
+		}
+
+		function addComment(inp) {
+			let cls = c % 2 === 0 ? "even" : "odd";
+			let tmpl = `
+				<div class="input">
+				<p><b><span class="${cls}">[${inp.author}]</span></b> ${inp.body}</p>
+				</div>`;
+
+			container.prepend(tmpl);
+			c += 1;
+
+			if(c > max_items)
+				container.find('.input:last').remove();
+		}
+
+		setupWs();
+	});
+</script>
+</html>

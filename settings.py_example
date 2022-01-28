@@ -1,0 +1,18 @@
+NUJIJ_ENABLED = True
+
+IRC_ENABLED = True
+IRC_HOST = 'localhost'
+IRC_PORT = 6667
+IRC_SSL = False
+IRC_NICK = "nujij"
+IRC_CHANNEL = "#nujij"
+IRC_REALNAME = "NUjij"
+IRC_COMMAND_PREFIX = '!'
+
+DEBUG = True
+WEB_BIND_HOST = "127.0.0.1"
+WEB_BIND_PORT = 6000
+
+import os
+cwd = os.path.dirname(os.path.realpath(__file__))
+PATH_DB = os.path.join(cwd, 'data', 'comments.db')
