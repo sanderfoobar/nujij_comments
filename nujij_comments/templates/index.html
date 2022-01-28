@@ -1,21 +1,24 @@
 <!--
 Feel free to subscribe to the websocket endpoint that is included on this page. Example:
 
-		import aiohttp
+  import asyncio
+  import aiohttp
+  import json
 
-		async def main():
-			ses = aiohttp.ClientSession()
-			ws = await ses.ws_connect("{{url_for('ws')}}")  # possibly needs wss://
-			while True:
-				msg = await ws.receive()
-				if msg.type in [aiohttp.WSMsgType.CLOSE, aiohttp.WSMsgType.CLOSED]:
-					print("ws disconnected")
-				else:
-					print(json.loads(msg))
+  async def main():
+      ses = aiohttp.ClientSession()
+      ws = await ses.ws_connect("{{url_for('ws')}}")  # possibly needs wss://
+      while True:
+          msg = await ws.receive()
+          if msg.type in [aiohttp.WSMsgType.CLOSE, aiohttp.WSMsgType.CLOSED]:
+              print("ws disconnected")
+          else:
+              print(json.loads(msg.data))
 
-		if __name__ == '__main__':
-			loop = asyncio.get_event_loop()
-			loop.run_until_complete(main())
+
+  if __name__ == '__main__':
+      loop = asyncio.get_event_loop()
+      loop.run_until_complete(main())
 
 this will get you the comment stream in both plain text and dushi.
 -->
