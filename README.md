@@ -1,5 +1,7 @@
 ## NUjij Comments Web & IRC Live Feed
 
+[Live example](https://nujij.sanderf.nl)
+
 Tracks *all* comments posted on `nu.nl` and forwards them to an IRC channel and web interface, hilarity ensues.
 
 This package consists of (all in one):
