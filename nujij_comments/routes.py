@@ -9,17 +9,6 @@ from quart import current_app as app
 
 import settings
 
-a = 0
-
-
-@app.route('/test')
-async def test():
-    global a
-    from nujij_comments.factory import COMMENT_QUEUE
-    await COMMENT_QUEUE.put({"dushi": {'author': 'noob', 'body': 'hello there' + str(a)}, "plain": {'author': 'noob', 'body': 'fakka G' + str(a)}})
-    a += 1
-    return "ok"
-
 
 @app.route("/")
 async def root():

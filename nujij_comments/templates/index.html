@@ -31,15 +31,10 @@ this will get you the comment stream in both plain text and dushi.
 	<script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
 </head>
 <body>
-	<pre>
- ▐ ▄ ▄• ▄▌ ▐▄▄▄▪   ▐▄▄▄
-•█▌▐██▪██▌  ·████   ·██
-▐█▐▐▌█▌▐█▌▪▄ ██▐█·▪▄ ██
-██▐█▌▐█▄█▌▐▌▐█▌▐█▌▐▌▐█▌
-▀▀ █▪ ▀▀▀  ▀▀▀•▀▀▀ ▀▀▀•</pre>
-	<span class="dushi_btn">dushi [OFF]</span>
-
-	<div id="screen"></div>
+  <div class="header">
+    <span>NUjij LIVE comment stream</span> | <span class="dushi_btn"><b>dushi [OFF]</b></span> | <a target="_blank" href="https://github.com/sanderfoobar/nujij_comments"><b>SOURCE</b></a>
+  </div>
+  <div id="screen"></div>
 </body>
 
 <script>
@@ -59,7 +54,7 @@ this will get you the comment stream in both plain text and dushi.
 
 		dushi_btn.on('click', () => {
 			dushi = !dushi;
-			dushi_btn.html(`dushi [${dushi ? 'ON' : 'OFF'}]`);
+			dushi_btn.html(`<b>dushi [${dushi ? 'ON' : 'OFF'}]</b>`);
 			redraw();
 		});
 

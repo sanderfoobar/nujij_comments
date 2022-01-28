@@ -1,6 +1,6 @@
 ## NUjij Comments Web & IRC Live Feed
 
-Tracks *all* comments posted on `nu.nl` and forwards them to an IRC channel, hilarity ensues.
+Tracks *all* comments posted on `nu.nl` and forwards them to an IRC channel and web interface, hilarity ensues.
 
 This package consists of (all in one):
 
