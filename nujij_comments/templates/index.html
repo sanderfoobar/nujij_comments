@@ -48,6 +48,9 @@ this will get you the comment stream in both plain text and dushi.
 	let ws;
 	let dushi = false;
 	let ws_url = "{{ url_for('ws') }}";
+  if (location.protocol === 'https:')
+      ws_url = ws_url.replace("ws://", "wss://");
+
 	let cache = [];
 
 	$(document).ready(() => {
@@ -73,8 +76,8 @@ this will get you the comment stream in both plain text and dushi.
 			}
 
 			ws.onclose = () => {
-				//ws = undefined;
-				//setTimeout(setupWs, 1000);
+				ws = undefined;
+				setTimeout(setupWs, 1000);
 			}
 		}
 
